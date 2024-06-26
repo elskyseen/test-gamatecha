@@ -5,6 +5,8 @@ type IInput = {
   name: string;
   type: "text" | "email" | "password";
   placeholder: string;
+  value: string;
+  onChange: (e: any) => any;
   isError?: boolean;
   errorMessage?: string;
 };
@@ -14,6 +16,8 @@ const Input: React.FC<IInput> = ({
   type,
   placeholder,
   label,
+  value,
+  onChange,
   isError,
   errorMessage,
 }) => {
@@ -30,6 +34,8 @@ const Input: React.FC<IInput> = ({
         name={name}
         id={name}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className="py-3 px-4 mb-1 rounded-md border-2 border-secondary text-secondary text-base font-bold placeholder:text-secondary/70 placeholder:capitalize"
       />
       {isError && (
