@@ -1,3 +1,4 @@
+"use client";
 import {
   createColumnHelper,
   flexRender,
@@ -7,12 +8,15 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 import PaginationButton from "../PaginationButton";
-import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons/faArrowCircleRight";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Title from "../Title";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { deleteUser } from "@/api/deleteUser";
 
 const DataTableUser = ({ data }: { data: any }) => {
   const columHelper = createColumnHelper();
+  const { data: session } = useSession();
 
   const columns = [
     columHelper.accessor("first_name", {
@@ -31,11 +35,21 @@ const DataTableUser = ({ data }: { data: any }) => {
       cell: (info) => info.getValue(),
       header: "Email",
     }),
-    columHelper.accessor("aksi", {
-      cell: () => (
+    columHelper.accessor("id", {
+      cell: (info) => (
         <div className="flex gap-2 justify-center items-center">
-          <button>edit</button>
-          <button>delete</button>
+          <Link
+            href={`/user/update/${info.getValue()}`}
+            className="bg-yellow-400/70 py-2 px-4 rounded-md font-bold text-primary"
+          >
+            edit
+          </Link>
+          <button
+            onClick={() => deleteUser(session?.user.token, info.getValue())}
+            className="bg-red-400/70 py-2 px-4 rounded-md font-bold text-primary"
+          >
+            delete
+          </button>
         </div>
       ),
       header: "Aksi",
@@ -77,7 +91,7 @@ const DataTableUser = ({ data }: { data: any }) => {
               }
             >
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={cell.id} className="p-4">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
@@ -85,7 +99,7 @@ const DataTableUser = ({ data }: { data: any }) => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end mt-2 mr-4 gap-4">
+      <div className="flex justify-end mt-6 mr-4 gap-4">
         <PaginationButton
           onClick={() => table.previousPage()}
           isDisabled={!table.getCanNextPage()}

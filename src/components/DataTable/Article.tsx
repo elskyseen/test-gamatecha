@@ -100,7 +100,7 @@ const DataTableArticle = ({
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end mt-2 mr-4 gap-4">
+      <div className="flex justify-end mt-6 mr-4 gap-4">
         <PaginationButton
           onClick={() => page(currentPage - 1)}
           isDisabled={currentPage <= 1}
