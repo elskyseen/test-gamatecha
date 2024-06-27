@@ -1,64 +1,19 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { getAllUser } from "@/api/getAllUser";
-import { useSession } from "next-auth/react";
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import PaginationButton from "@/components/PaginationButton";
+import React from "react";
+import PaginationButton from "./PaginationButton";
 
-const Dashboard = () => {
-  const [users, setUsers] = useState([]);
-  const { data: session } = useSession();
-  const getUsers = async () => {
-    const data = await getAllUser(session?.user.token);
-    setUsers(data);
-  };
-  useEffect(() => {
-    getUsers();
-  }, [session]);
-
-  const columHelper = createColumnHelper();
-
-  const columns = [
-    columHelper.accessor("first_name", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "FirstName",
-    }),
-    columHelper.accessor("last_name", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "LastName",
-    }),
-    columHelper.accessor("username", {
-      cell: (info) => info.getValue(),
-      header: "Username",
-    }),
-    columHelper.accessor("email", {
-      cell: (info) => info.getValue(),
-      header: "Email",
-    }),
-    columHelper.accessor("aksi", {
-      cell: () => (
-        <div className="flex gap-2 justify-center items-center">
-          <button>edit</button>
-          <button>delete</button>
-        </div>
-      ),
-      header: "Aksi",
-    }),
-  ];
-
+const DataTable = (data: any, columns: any) => {
   const table = useReactTable({
-    data: users,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
   return (
     <>
       <table className="w-full border-2 border-primary">
@@ -116,4 +71,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DataTable;

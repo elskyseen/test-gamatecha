@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { getAllUser } from "@/api/getAllUser";
-import { useSession } from "next-auth/react";
+import { getArticles } from "@/api/getArticles";
+import PaginationButton from "@/components/PaginationButton";
+import { replaceString } from "@/utils/replaceString";
 import {
   createColumnHelper,
   flexRender,
@@ -9,43 +9,48 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import PaginationButton from "@/components/PaginationButton";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 
-const Dashboard = () => {
-  const [users, setUsers] = useState([]);
+const page = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [articles, setArticles] = useState([]);
   const { data: session } = useSession();
-  const getUsers = async () => {
-    const data = await getAllUser(session?.user.token);
-    setUsers(data);
+
+  const getAllArticles = async () => {
+    const data = await getArticles(session?.user.token, currentPage);
+    setArticles(data.data);
   };
+
   useEffect(() => {
-    getUsers();
-  }, [session]);
+    getAllArticles();
+  }, [session, currentPage]);
 
   const columHelper = createColumnHelper();
 
   const columns = [
-    columHelper.accessor("first_name", {
-      cell: (info) => <span>{info.getValue()}</span>,
+    columHelper.accessor("slug", {
+      cell: (info) => <span>{replaceString(info.getValue(), 24)}</span>,
       header: "FirstName",
     }),
-    columHelper.accessor("last_name", {
-      cell: (info) => <span>{info.getValue()}</span>,
+    columHelper.accessor("title", {
+      cell: (info) => <span>{replaceString(info.getValue(), 24)}</span>,
       header: "LastName",
     }),
-    columHelper.accessor("username", {
-      cell: (info) => info.getValue(),
+    columHelper.accessor("caption", {
+      cell: (info) => <span>{replaceString(info.getValue(), 24)}</span>,
       header: "Username",
     }),
-    columHelper.accessor("email", {
-      cell: (info) => info.getValue(),
+    columHelper.accessor("description", {
+      cell: (info) => <span>{replaceString(info.getValue(), 24)}</span>,
       header: "Email",
     }),
     columHelper.accessor("aksi", {
       cell: () => (
         <div className="flex gap-2 justify-center items-center">
-          <button>edit</button>
-          <button>delete</button>
+          <button className="py-1 px-2 rounded-md bg-primary text-white">
+            lihat
+          </button>
         </div>
       ),
       header: "Aksi",
@@ -53,7 +58,7 @@ const Dashboard = () => {
   ];
 
   const table = useReactTable({
-    data: users,
+    data: articles,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -82,11 +87,11 @@ const Dashboard = () => {
               key={row.id}
               className={
                 (i % 2 === 0 ? "bg-slate-100/40" : "bg-slate-300/40") +
-                " text-center text-lg font-medium"
+                " text-lg font-medium"
               }
             >
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={cell.id} className="p-2">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
@@ -96,19 +101,16 @@ const Dashboard = () => {
       </table>
       <div className="flex justify-end mt-2 mr-4 gap-4">
         <PaginationButton
-          onClick={() => table.previousPage()}
-          isDisabled={!table.getCanNextPage()}
+          onClick={() => setCurrentPage(currentPage - 1)}
+          isDisabled={currentPage <= 1}
           text="next"
         />
         <p className="flex items-center font-bold text-secondary">
-          {table.getState().pagination.pageIndex +
-            1 +
-            " of " +
-            table.getPageCount()}
+          page {currentPage}
         </p>
         <PaginationButton
-          onClick={() => table.nextPage()}
-          isDisabled={!table.getCanPreviousPage()}
+          onClick={() => setCurrentPage(currentPage + 1)}
+          isDisabled={currentPage >= 3}
           text="next"
         />
       </div>
@@ -116,4 +118,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default page;

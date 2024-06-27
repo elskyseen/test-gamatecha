@@ -20,15 +20,33 @@ export const authOptions: NextAuthOptions = {
           );
           const user = await getUser(access);
           return {
-            name: user.username,
-            email: user.email,
-            role: user.role,
+            ...user,
+            token: access,
           };
         }
       },
     }),
   ],
   secret: process.env.NEXTAUTH_URL,
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
+        token.name = user.username;
+        token.token = user.token;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.name = token.name;
+        session.user.role = token.role;
+        session.user.token = token.token;
+      }
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
