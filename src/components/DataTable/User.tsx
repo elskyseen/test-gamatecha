@@ -1,19 +1,51 @@
 import {
+  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
-import PaginationButton from "./PaginationButton";
+import PaginationButton from "../PaginationButton";
 
-const DataTable = (data: any, columns: any) => {
+const DataTableUser = ({ data }: { data: any }) => {
+  const columHelper = createColumnHelper();
+
+  const columns = [
+    columHelper.accessor("first_name", {
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "FirstName",
+    }),
+    columHelper.accessor("last_name", {
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "LastName",
+    }),
+    columHelper.accessor("username", {
+      cell: (info) => info.getValue(),
+      header: "Username",
+    }),
+    columHelper.accessor("email", {
+      cell: (info) => info.getValue(),
+      header: "Email",
+    }),
+    columHelper.accessor("aksi", {
+      cell: () => (
+        <div className="flex gap-2 justify-center items-center">
+          <button>edit</button>
+          <button>delete</button>
+        </div>
+      ),
+      header: "Aksi",
+    }),
+  ];
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
   return (
     <>
       <table className="w-full border-2 border-primary">
@@ -71,4 +103,4 @@ const DataTable = (data: any, columns: any) => {
   );
 };
 
-export default DataTable;
+export default DataTableUser;
