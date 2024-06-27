@@ -4,6 +4,8 @@ import Input from "@/components/Input";
 import { signIn } from "next-auth/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 const initialValue = {
   username: "",
@@ -69,7 +71,14 @@ const Login = () => {
           onClick={() => handleSubmit()}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "loading..." : "masuk"}
+          {isSubmitting ? (
+            "loading..."
+          ) : (
+            <div className="flex justify-center items-center gap-2">
+              <p>masuk</p>
+              <FontAwesomeIcon icon={faRightToBracket} className="text-xl"/>
+            </div>
+          )}
         </button>
       </div>
     </section>

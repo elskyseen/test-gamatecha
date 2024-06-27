@@ -1,4 +1,5 @@
 import PaginationButton from "@/components/PaginationButton";
+import Title from "@/components/Title";
 import { replaceString } from "@/utils/replaceString";
 import React from "react";
 
@@ -13,6 +14,9 @@ const Article = ({
 }) => {
   return (
     <div className="grid grid-cols-12 gap-4">
+      <div className="col-span-12">
+        <Title text="list article" />
+      </div>
       {articles?.map((article: any) => {
         return (
           <div

@@ -1,6 +1,7 @@
 "use client";
 import LogoutButton from "@/components/LogoutButton";
 import NavLink from "@/components/NavLink";
+import { faBook, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SessionProvider } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
@@ -22,11 +23,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </h1>
             <NavLink
               path="/dashboard"
+              icon={faUser}
               isActive={countPath.length === 2}
               label="user"
             />
             <NavLink
               path="/dashboard/articles"
+              icon={faBook}
               isActive={countPath.length === 3}
               label="articles"
             />

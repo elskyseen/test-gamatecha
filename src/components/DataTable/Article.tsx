@@ -8,6 +8,13 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 import PaginationButton from "../PaginationButton";
+import {
+  faArrowLeft,
+  faArrowRight,
+  faEye,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Title from "../Title";
 
 const DataTableArticle = ({
   data,
@@ -40,8 +47,9 @@ const DataTableArticle = ({
     columHelper.accessor("aksi", {
       cell: () => (
         <div className="flex gap-2 justify-center items-center">
-          <button className="py-1 px-2 rounded-md bg-primary text-white">
-            lihat
+          <button className="py-1 px-2 rounded-md bg-primary text-white flex justify-center items-center gap-2">
+            <FontAwesomeIcon icon={faEye} />
+            <p>lihat</p>
           </button>
         </div>
       ),
@@ -58,6 +66,7 @@ const DataTableArticle = ({
 
   return (
     <>
+      <Title text="list article" />
       <table className="w-full border-2 border-primary">
         <thead className="bg-primary text-white">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -95,7 +104,8 @@ const DataTableArticle = ({
         <PaginationButton
           onClick={() => page(currentPage - 1)}
           isDisabled={currentPage <= 1}
-          text="next"
+          icon={faArrowLeft}
+          text="prev"
         />
         <p className="flex items-center font-bold text-secondary">
           page {currentPage}
@@ -103,6 +113,7 @@ const DataTableArticle = ({
         <PaginationButton
           onClick={() => page(currentPage + 1)}
           isDisabled={currentPage >= 3}
+          icon={faArrowRight}
           text="next"
         />
       </div>

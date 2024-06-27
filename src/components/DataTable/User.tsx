@@ -7,6 +7,9 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 import PaginationButton from "../PaginationButton";
+import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons/faArrowCircleRight";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import Title from "../Title";
 
 const DataTableUser = ({ data }: { data: any }) => {
   const columHelper = createColumnHelper();
@@ -48,6 +51,7 @@ const DataTableUser = ({ data }: { data: any }) => {
 
   return (
     <>
+      <Title text="list user" />
       <table className="w-full border-2 border-primary">
         <thead className="bg-primary text-white">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -85,7 +89,8 @@ const DataTableUser = ({ data }: { data: any }) => {
         <PaginationButton
           onClick={() => table.previousPage()}
           isDisabled={!table.getCanNextPage()}
-          text="next"
+          icon={faArrowLeft}
+          text="prev"
         />
         <p className="flex items-center font-bold text-secondary">
           {table.getState().pagination.pageIndex +
@@ -95,6 +100,7 @@ const DataTableUser = ({ data }: { data: any }) => {
         </p>
         <PaginationButton
           onClick={() => table.nextPage()}
+          icon={faArrowRight}
           isDisabled={!table.getCanPreviousPage()}
           text="next"
         />
